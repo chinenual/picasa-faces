@@ -14,6 +14,13 @@ func createThumb(dir string, relImagePath string, cropCoords [4]float32) (thumbn
 	thumbPath := path.Join(dir, thumbname)
 	srcPath := path.Join(*base, relImagePath)
 
+	if _, err := os.Stat(srcPath); err != nil && os.IsNotExist(err) {
+		// source file doesn't exist -- this happens when there are stale references to files in the
+		// .picasa.ini that have been deleted or moved since we were running picasa
+		log.Printf("Missing image (stale reference): %s\n", srcPath)
+		thumbname = ""
+		return
+	}
 	// coords are [left, top, right, bottom]
 	// right-left = "percentage width" - similarly bottom-top
 	const LEFT = 0
@@ -57,10 +64,11 @@ func renderPersonThumb(name string, relImagePath string, cropCoords [4]float32) 
 	if err != nil {
 		log.Fatal(err)
 	}
-	thumbName := createThumb(thumbDir, relImagePath, cropCoords)
-
 	defer f.Close()
-	f.WriteString("<a href='../" + relImagePath + "'><img style='width:" + thumbWidth + ";' src='thumbs/" + thumbName + "'></img></a>\n")
+	thumbName := createThumb(thumbDir, relImagePath, cropCoords)
+	if thumbName != "" {
+		f.WriteString("<a href='../" + relImagePath + "'><img style='width:" + thumbWidth + ";' src='thumbs/" + thumbName + "'></img></a>\n")
+	}
 }
 
 func renderIndex(names []string) {
