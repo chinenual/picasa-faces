@@ -17,12 +17,12 @@ This will recursively visit all subdirectories under the base path, looking for 
 ```
 /path/to/images/Picasa-Faces
     index.html
-    Joe Schmoe.html
-    Jane Doe.html
+    Jane+Doe.html
+    Joe+Schmoe.html
     ...
     thumbs
+       thumb00000.jpg
        thumb00001.jpg
-       thumb00002.jpg
        ...
 ```
 The index contain links to each person's thumbnail page; each of those contains thumbnails cropped to the Picasa identified face.
