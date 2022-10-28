@@ -39,7 +39,6 @@ func convertRect64(v string) (result [4]float32) {
 	}
 
 	result[0] = float32((u>>48)&0xffff) / 65535.0
-	result[0] = float32((u>>48)&0xffff) / 65535.0
 	result[1] = float32((u>>32)&0xffff) / 65535.0
 	result[2] = float32((u>>16)&0xffff) / 65535.0
 	result[3] = float32(u&0xffff) / 65535.0

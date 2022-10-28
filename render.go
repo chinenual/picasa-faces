@@ -32,7 +32,7 @@ func createThumb(dir string, relImagePath string, cropCoords [4]float32) (thumbn
 		srcPath,
 		"-gravity", "NorthWest",
 		"-crop",
-		// crop FX expressions require imagemagic7:
+		// crop FX expressions require imagemagick7:
 		fmt.Sprintf(
 			"%d%%x%d%%+%%[fx:w*%f]+%%[fx:h*%f]",
 			int64(100.0*(cropCoords[RIGHT]-cropCoords[LEFT])),
@@ -60,15 +60,15 @@ func renderPersonThumb(name string, relImagePath string, cropCoords [4]float32) 
 	if err = os.MkdirAll(thumbDir, 0777); err != nil {
 		log.Fatalf("Could not create output folder %s: %v\n", thumbDir, err)
 	}
-	p = path.Join(p, url.QueryEscape(name)+".html")
-	f, err := os.OpenFile(p, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0660)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer f.Close()
 	thumbName := createThumb(thumbDir, relImagePath, cropCoords)
 	if thumbName != "" {
-		f.WriteString("<a href='../" + url.QueryEscape(relImagePath) + "'><img style='width:" + thumbWidth + ";' src='thumbs/" + thumbName + "'></img></a>\n")
+		p = path.Join(p, url.QueryEscape(name)+".html")
+		f, err := os.OpenFile(p, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0660)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer f.Close()
+		f.WriteString("<a href='../" + relImagePath + "'><img style='width:" + thumbWidth + ";' src='thumbs/" + thumbName + "'></img></a>\n")
 	}
 }
 
